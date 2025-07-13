@@ -4,10 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App | Real-time Weather Forecasts</title>
-    <meta name="description" content="Get accurate, real-time weather forecasts with Weather App. Check temperature, wind, humidity and 5-day forecasts for any location worldwide.">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <meta name="description" content="Get accurate, real-time weather forecasts with WeatherSphere Pro. Check temperature, wind, humidity and 5-day forecasts for any location worldwide.">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        .weather-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .weather-icon {
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.2));
+        }
+    </style>
 </head>
 <body class="min-h-screen gradient-bg text-white font-sans">
     <div class="container mx-auto px-4 py-8">
@@ -81,12 +111,39 @@
         </main>
         
         <footer class="text-center mt-12 text-sm opacity-70">
-            <p>© 2025 Mikiyas</p>
+            <p>© 2025 Mikiyas </p>
         </footer>
     </div>
 
-    <script src="weatherService.js"></script>
-    <script src="ui.js"></script>
-    <script src="app.js"></script>
-</body>
-                      </html>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const apiKey = '10577a9d6d20d50e737bb45bdf0d462f'; // OpenWeatherMap API key
+            const searchBtn = document.getElementById('search-btn');
+            const locationInput = document.getElementById('location-input');
+            
+            // Default location (can be changed)
+            fetchWeather('London');
+            
+            searchBtn.addEventListener('click', () => {
+                const location = locationInput.value.trim();
+                if (location) {
+                    fetchWeather(location);
+                }
+            });
+            
+            locationInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const location = locationInput.value.trim();
+                    if (location) {
+                        fetchWeather(location);
+                    }
+                }
+            });
+            
+            function fetchWeather(location) {
+                // Current weather
+                fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${apiKey}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        updateCurrentWeather(data);
+                        return fetch(`https://api.openweathermap.org/data/2.5/
